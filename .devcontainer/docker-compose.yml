@@ -1,0 +1,49 @@
+version: '3.8'
+
+volumes:
+  db-data:
+  cache-data:
+  storage-data:
+
+networks:
+  testcontainers-network:
+
+services:
+  app:
+    image: mcr.microsoft.com/devcontainers/dotnet:7.0
+    volumes:
+      - ../..:/workspaces:cached
+    networks:
+      - testcontainers-network
+    command: sleep infinity
+
+  db:
+    image: postgres:alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
+    networks:
+      - testcontainers-network
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  cache:
+    image: redis:alpine
+    ports:
+      - 6379:6379
+    networks:
+      - testcontainers-network
+    volumes:
+      - cache-data:/data
+
+  storage:
+    image: mcr.microsoft.com/azure-storage/azurite
+    ports:
+      - 10000-10002:10000-10002
+    networks:
+      - testcontainers-network
+    volumes:
+      - storage-data:/data
+

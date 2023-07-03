@@ -1,0 +1,17 @@
+{
+    "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+    "words": [
+        "ASPNETCORE",
+        "devcontainer",
+        "Hsts",
+        "Npgsql",
+        "Serilog",
+        "Testcontainer",
+        "Testcontainers",
+        "Xunit"
+    ],
+    "ignorePaths": [
+        ".devcontainer",
+        ".vscode"
+    ]
+}

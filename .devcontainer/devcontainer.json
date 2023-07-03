@@ -1,0 +1,73 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/dotnet
+{
+    "name": "Testcontainers 101",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "app",
+    "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+    "features": {
+        "ghcr.io/devcontainers/features/common-utils": {},
+        "ghcr.io/devcontainers/features/docker-outside-of-docker": {},
+        "ghcr.io/devcontainers/features/git": {},
+        "ghcr.io/devcontainers/features/node": {},
+        "ghcr.io/devcontainers-contrib/features/zsh-plugins": {
+            "omzPlugins": "https://github.com/zsh-users/zsh-autosuggestions.git https://github.com/zsh-users/zsh-syntax-highlighting.git",
+            "plugins": "zsh-autosuggestions zsh-syntax-highlighting"
+        },
+        "ghcr.io/stuartleeks/dev-container-features/shell-history": {},
+        "ghcr.io/devcontainers/features/java": {}
+    },
+    // Use 'forwardPorts' to make a list of ports inside the container available locally.
+    "forwardPorts": [
+        "db:5432",
+        "cache:6379",
+        "storage:10000",
+        "storage:10001",
+        "storage:10002"
+    ],
+    "portsAttributes": {
+        "5432": {
+            "protocol": "http",
+            "label": "Postgres"
+        },
+        "6379": {
+            "protocol": "http",
+            "label": "Redis"
+        },
+        "10000-10002": {
+            "protocol": "http",
+            "label": "Azurite"
+        }
+    },
+    // Use 'postCreateCommand' to run commands after the container is created.
+    "postCreateCommand": "bash .devcontainer/scripts/post-create.sh",
+    // Configure tool-specific properties.
+    "customizations": {
+        "vscode": {
+            "extensions": [
+				"adrianwilczynski.namespace",
+				"bierner.markdown-mermaid",
+				"DavidAnson.vscode-markdownlint",
+				"EditorConfig.EditorConfig",
+				"Fudge.auto-using",
+				"humao.rest-client",
+				"josefpihrt-vscode.roslynator",
+				"k--kato.docomment",
+				"kreativ-software.csharpextensions",
+				"mads-hartmann.bash-ide-vscode",
+				"markis.code-coverage",
+				"ms-azuretools.vscode-docker",
+				"ms-dotnettools.csharp",
+				"redhat.vscode-xml",
+				"redhat.vscode-yaml",
+				"streetsidesoftware.code-spell-checker",
+				"tintoy.msbuild-project-tools",
+				"usernamehw.errorlens",
+				"VisualStudioExptTeam.intellicode-api-usage-examples",
+				"VisualStudioExptTeam.vscodeintellicode",
+				"yzhang.markdown-all-in-one",
+				"formulahendry.dotnet-test-explorer"
+			]
+        }
+    }
+}
