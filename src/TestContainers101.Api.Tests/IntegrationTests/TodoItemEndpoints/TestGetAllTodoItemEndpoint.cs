@@ -5,39 +5,30 @@ using System.Net.Http.Json;
 
 using FluentAssertions;
 
-using Microsoft.Extensions.DependencyInjection;
-
 using TestContainers101.Api.Entities;
-using TestContainers101.Api.Infra.Persistence;
+using TestContainers101.Api.Tests.Extensions;
 using TestContainers101.Api.Tests.Fakers;
 using TestContainers101.Api.Tests.Fixtures;
 
-public class GetAllTodoItemEndpoint : IClassFixture<TestWebApplicationFactory<Program>>, IAsyncLifetime
+public class TestGetAllTodoItemEndpoint : IClassFixture<TestWebApplicationFactory<Program>>, IAsyncLifetime
 {
     private readonly TestWebApplicationFactory<Program> _factory;
+    private readonly TodoItemFaker _faker = new();
 
-    public GetAllTodoItemEndpoint(TestWebApplicationFactory<Program> factory)
+    public TestGetAllTodoItemEndpoint(TestWebApplicationFactory<Program> factory)
     {
         _factory = factory;
     }
 
     public async Task InitializeAsync()
     {
-        await using var scope = _factory.Services.CreateAsyncScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        await dbContext.Database.EnsureCreatedAsync();
-
-        var todoItems = new TodoItemFaker().Generate(10);
-
-        await dbContext.TodoItems.AddRangeAsync(todoItems);
-        await dbContext.SaveChangesAsync();
+        var todoItems = _faker.WithRandomIsComplete().Generate(10);
+        await _factory.EnsureCreatedAndPopulateDataAsync(todoItems);
     }
 
     public async Task DisposeAsync()
     {
-        await using var scope = _factory.Services.CreateAsyncScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        await dbContext.Database.EnsureDeletedAsync();
+        await _factory.EnsureDeletedAsync();
     }
 
     [Fact]

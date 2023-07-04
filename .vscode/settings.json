@@ -11,5 +11,5 @@
     },
     "files.readonlyExclude": {
         "**/node_modules": true,
-    }
+    },
 }

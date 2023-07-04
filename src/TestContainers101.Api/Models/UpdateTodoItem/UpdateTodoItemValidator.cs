@@ -4,7 +4,6 @@ namespace TestContainers101.Api.Models;
 
 public class UpdateTodoItemValidator : AbstractValidator<UpdateTodoItemRequest>
 {
-
     public UpdateTodoItemValidator()
     {
         RuleFor(x => x.Title)

@@ -55,7 +55,6 @@
 				"k--kato.docomment",
 				"kreativ-software.csharpextensions",
 				"mads-hartmann.bash-ide-vscode",
-				"markis.code-coverage",
 				"ms-azuretools.vscode-docker",
 				"ms-dotnettools.csharp",
 				"redhat.vscode-xml",
@@ -66,7 +65,9 @@
 				"VisualStudioExptTeam.intellicode-api-usage-examples",
 				"VisualStudioExptTeam.vscodeintellicode",
 				"yzhang.markdown-all-in-one",
-				"formulahendry.dotnet-test-explorer"
+				"formulahendry.dotnet-test-explorer",
+				"ryanluker.vscode-coverage-gutters",
+				"nuke.support"
 			]
         }
     }

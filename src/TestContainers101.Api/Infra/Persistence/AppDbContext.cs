@@ -13,11 +13,9 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<TodoItem> TodoItems { get; set; } = null!;
-    public DbSet<Attachment> Attachments { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new TodoItemConfiguration());
-        modelBuilder.ApplyConfiguration(new AttachmentConfiguration());
     }
 }

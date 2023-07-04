@@ -6,4 +6,3 @@ public record CreateTodoItemRequest
     public string? Note { get; set; }
     public bool IsComplete { get; set; }
 }
-

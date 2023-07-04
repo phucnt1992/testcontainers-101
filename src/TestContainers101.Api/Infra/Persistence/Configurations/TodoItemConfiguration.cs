@@ -22,10 +22,5 @@ class TodoItemConfiguration : BaseConfiguration<TodoItem>
         builder.Property(x => x.IsComplete)
             .HasColumnName("is_complete")
             .HasColumnType("boolean");
-
-        builder.HasMany(x => x.Attachments)
-            .WithOne(x => x.BelongToItem)
-            .HasForeignKey(x => x.TodoItemId)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }
