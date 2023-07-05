@@ -1,10 +1,19 @@
+using System.Linq;
 using System.Reflection.Metadata;
 
 using Nuke.Common;
+using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tools.Coverlet;
 using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.EntityFramework;
 using Nuke.Common.Utilities.Collections;
+
+[GitHubActions("ci",
+    GitHubActionsImage.UbuntuLatest,
+    OnPushBranches = new[] { "main" },
+    OnPullRequestBranches = new[] { "main" },
+    InvokedTargets = new[] { nameof(TestWithCoverage) })]
 class Build : NukeBuild
 {
     /// <summary>
@@ -64,4 +73,13 @@ class Build : NukeBuild
                 .SetExcludeByFile("**/Migrations/*.cs")
                 .SetNoRestore(true)
             )));
+
+    Target DbUpdate => _ => _
+        .DependsOn(Compile)
+        .Executes(()
+         => EntityFrameworkTasks.EntityFrameworkDatabaseUpdate(s => s
+                .SetProject(Solution.GetAllProjects("TestContainers101.Api").First())
+                .SetConfiguration(_configuration)
+                .SetNoBuild(true)
+            ));
 }

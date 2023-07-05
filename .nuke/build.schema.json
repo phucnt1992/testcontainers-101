@@ -74,6 +74,7 @@
             "enum": [
               "Clean",
               "Compile",
+              "DbUpdate",
               "Recompile",
               "Restore",
               "Test",
@@ -93,6 +94,7 @@
             "enum": [
               "Clean",
               "Compile",
+              "DbUpdate",
               "Recompile",
               "Restore",
               "Test",

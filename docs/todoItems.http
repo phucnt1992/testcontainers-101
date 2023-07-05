@@ -1,6 +1,6 @@
 ### Var declaration
 @host = http://localhost:5000
-@defaultTodoId = 1
+@defaultTodoId = 2
 
 ### Get all todo items
 GET {{host}}/api/todo-items/
@@ -17,7 +17,7 @@ Content-Type: application/json
 
 {
     "title": "New todo item",
-    "description": "New todo item description"
+    "note": "New todo item note"
 }
 
 ### Update todo item
@@ -28,18 +28,13 @@ Content-Type: application/json
 
 {
     "title": "Updated todo item",
-    "description": "Updated todo item description"
-}
-
-### Update partial todo item
-PATCH {{newTodoItemUrl}}
-Content-Type: application/json
-
-{
-    "description": "Updated todo item description"
+    "note": "Updated todo item note",
+    "isComplete": true
 }
 
 ### Delete todo item
+@newTodoItemUrl = {{createTodoItem.response.headers.location}}
+
 DELETE {{newTodoItemUrl}}
 Content-Type: application/json
 ```

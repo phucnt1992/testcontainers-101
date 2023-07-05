@@ -1,5 +1,6 @@
 using FluentValidation;
 
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,6 +28,12 @@ public static class TodoItemEndpoints
         return group;
     }
 
+    static private ProblemHttpResult NotFoundProblem(long id)
+        => TypedResults.Problem($"TodoItem with id={id} is not found.", statusCode: StatusCodes.Status404NotFound);
+
+    static private bool ValidateTodoId(long id)
+        => id <= 0;
+
     static async Task<IResult> GetAllTodoItemAsync(
         [FromServices] AppDbContext dbContext,
         CancellationToken token
@@ -46,9 +53,9 @@ public static class TodoItemEndpoints
     )
     {
         // Id is unsigned, so it can't be negative
-        if (id <= 0)
+        if (ValidateTodoId(id))
         {
-            return TypedResults.NotFound(id);
+            return NotFoundProblem(id);
         }
 
         var todoItem = await dbContext.TodoItems
@@ -57,7 +64,7 @@ public static class TodoItemEndpoints
 
         if (todoItem is null)
         {
-            return TypedResults.NotFound(id);
+            return NotFoundProblem(id);
         }
 
         return TypedResults.Ok(todoItem);
@@ -86,7 +93,7 @@ public static class TodoItemEndpoints
         await dbContext.TodoItems.AddAsync(todoItem, token);
         await dbContext.SaveChangesAsync(token);
 
-        return TypedResults.CreatedAtRoute(todoItem.Id, nameof(GetTodoItemByIdAsync), new { todoItem.Id });
+        return TypedResults.CreatedAtRoute(nameof(GetTodoItemByIdAsync), new { todoItem.Id });
     }
 
     static async Task<IResult> PutTodoItemAsync(
@@ -97,10 +104,9 @@ public static class TodoItemEndpoints
         CancellationToken token
     )
     {
-        // Id is unsigned, so it can't be negative
-        if (id <= 0)
+        if (ValidateTodoId(id))
         {
-            return TypedResults.NotFound(id);
+            return NotFoundProblem(id);
         }
 
         var validationResult = await validator.ValidateAsync(updateTodoItemRequest, token);
@@ -115,7 +121,7 @@ public static class TodoItemEndpoints
 
         if (todoItem is null)
         {
-            return TypedResults.NotFound(id);
+            return NotFoundProblem(id);
         }
 
         todoItem.Title = updateTodoItemRequest.Title;
@@ -134,10 +140,9 @@ public static class TodoItemEndpoints
         CancellationToken token
     )
     {
-        // Id is unsigned, so it can't be negative
-        if (id <= 0)
+        if (ValidateTodoId(id))
         {
-            return TypedResults.NotFound(id);
+            return NotFoundProblem(id);
         }
 
         var todoItem = await dbContext.TodoItems
@@ -145,7 +150,7 @@ public static class TodoItemEndpoints
 
         if (todoItem is null)
         {
-            return TypedResults.NotFound(id);
+            return NotFoundProblem(id);
         }
 
         dbContext.TodoItems.Remove(todoItem);
