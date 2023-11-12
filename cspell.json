@@ -3,6 +3,7 @@
     "words": [
         "ASPNETCORE",
         "devcontainer",
+        "healthz",
         "Hsts",
         "Npgsql",
         "Serilog",
