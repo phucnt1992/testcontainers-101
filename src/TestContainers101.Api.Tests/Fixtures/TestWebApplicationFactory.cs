@@ -23,7 +23,6 @@ public class TestWebApplicationFactory<TProgram>
             .WithDatabase($"test_db_{Guid.NewGuid()}")
             .WithUsername("postgres")
             .WithPassword("postgres")
-            .WithExposedPort(new Random(Guid.NewGuid().GetHashCode()).Next(49152, 65535))
             .WithImage("postgres:alpine")
             .WithCleanUp(true)
             .Build();
