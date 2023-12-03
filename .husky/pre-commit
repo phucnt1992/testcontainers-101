@@ -1,13 +1,10 @@
-#!/usr/bin/env sh
+#!/usr/bin/env zsh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# linting markdown
-@npx markdownlint-cli --ignore node_modules .
+# linting
+nuke lint
 
-# lint dotnet files
-dotnet build /warnaserror
-
-# format dotnet files
-dotnet format
+# format files
+nuke format
 
 

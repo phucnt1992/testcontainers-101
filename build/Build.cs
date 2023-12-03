@@ -8,6 +8,7 @@ using Nuke.Common.ProjectModel;
 using Nuke.Common.Tools.Coverlet;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.EntityFramework;
+using Nuke.Common.Tools.Npm;
 using Nuke.Common.Tools.ReportGenerator;
 using Nuke.Common.Utilities.Collections;
 
@@ -16,7 +17,7 @@ using Nuke.Common.Utilities.Collections;
     AutoGenerate = false,
     OnPushBranches = new[] { "main" },
     OnPullRequestBranches = new[] { "main" },
-    InvokedTargets = new[] { nameof(TestWithCoverage) })]
+    InvokedTargets = new[] { nameof(Init), nameof(Lint), nameof(TestWithCoverage) })]
 class Build : NukeBuild
 {
     /// <summary>
@@ -43,6 +44,9 @@ class Build : NukeBuild
     string CoveragePrefix => $"{CoverageName}.*";
     string CoverageReportFile => $"{CoverageName}.cobertura.xml";
 
+    Target Init => _ => _
+        .Executes(() => NpmTasks.NpmCi());
+
     Target Clean => _ => _
         .Before(Restore)
         .Executes(() => Solution.GetAllProjects(ProjectPrefix)
@@ -61,11 +65,32 @@ class Build : NukeBuild
                 .SetProjectFile(project)
             )));
 
+    Target Lint => _ => _
+        .After(Init)
+        .Executes(() => Solution.GetAllProjects(ProjectPrefix)
+            .ForEach(project =>
+            {
+                NpmTasks.NpmRun(s => s
+                    .SetCommand("lint"));
+
+                DotNetTasks.DotNetBuild(s => s
+                    .SetProjectFile(project)
+                    .AddWarningsAsErrors());
+            }));
+
+    Target Format => _ => _
+        .DependsOn(Restore)
+        .Executes(() => Solution.GetAllProjects(ProjectPrefix)
+            .ForEach(project => DotNetTasks.DotNetFormat(s => s
+                .SetProject(project)
+            )));
+
     Target Compile => _ => _
         .DependsOn(Restore)
         .Executes(() => Solution.GetAllProjects(ProjectName)
             .ForEach(project => DotNetTasks.DotNetBuild(s => s
                 .SetProjectFile(project)
+                .SetNoRestore(true)
             )));
 
     Target Recompile => _ => _
@@ -83,6 +108,7 @@ class Build : NukeBuild
 
     Target TestWithCoverage => _ => _
         .DependsOn(Compile)
+        .After(Lint)
         .Executes(() => Solution.GetAllProjects(TestProjectPostfix)
             .ForEach(project => DotNetTasks.DotNetTest(s => s
                 .SetProjectFile(project)
