@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Add the current directory to the safe list
 git config --global --add safe.directory /workspaces/$(basename $PWD)
 
@@ -18,7 +20,7 @@ dotnet tool install Nuke.GlobalTool --global
 # add dotnet tools to path
 cat <<EOF >> ~/.zshrc
 path+=(
-    "$HOME/.dotnet/tools"
+    "\$HOME/.dotnet/tools"
 )
 EOF
 
@@ -26,8 +28,8 @@ EOF
 cat <<EOF >> ~/.zshrc
 _nuke_zsh_complete()
 {
-    local completions=("$(nuke :complete "$words")")
-    reply=( "${(ps:\n:)completions}" )
+    local completions=("\$(nuke :complete "\$words")")
+    reply=( "\${(ps:\n:)completions}" )
 }
 compctl -K _nuke_zsh_complete nuke
 EOF
