@@ -1,6 +1,6 @@
 # Testcontainers 101
 
-
+![Codecov](https://img.shields.io/codecov/c/github/phucnt1992/testcontainers-101)
 [![ci](https://github.com/phucnt1992/testcontainers-101/actions/workflows/ci.yml/badge.svg)](https://github.com/phucnt1992/testcontainers-101/actions/workflows/ci.yml)
 
 ## Introduction
@@ -27,3 +27,9 @@ If you want to contribute to this project, please read the following guidelines:
 3. [Test Containers](https://www.testcontainers.org/)
 
 Happy Coding 🚀.
+
+## License
+
+![GitHub License](https://img.shields.io/github/license/phucnt1992/azure-well-architected-framework-mindmap)
+
+This project is licensed under the [MIT License](LICENSE).
