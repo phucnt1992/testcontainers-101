@@ -67,20 +67,23 @@ class Build : NukeBuild
 
     Target Lint => _ => _
         .After(Init)
-        .Before(Format)
-        .Executes(() => Solution.GetAllProjects(ProjectPrefix)
+        .Executes(() =>
+        {
+            NpmTasks.NpmRun(s => s
+                .SetCommand("lint"));
+
+            Solution.GetAllProjects(ProjectPrefix)
             .ForEach(project =>
             {
-                NpmTasks.NpmRun(s => s
-                    .SetCommand("lint"));
-
                 DotNetTasks.DotNetBuild(s => s
                     .SetProjectFile(project)
                     .AddWarningsAsErrors());
-            }));
+            });
+        });
 
     Target Format => _ => _
         .DependsOn(Restore)
+        .After(Lint)
         .Executes(() => Solution.GetAllProjects(ProjectPrefix)
             .ForEach(project => DotNetTasks.DotNetFormat(s => s
                 .SetProject(project)
