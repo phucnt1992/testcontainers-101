@@ -14,3 +14,6 @@ EOF
 # install dotnet-ef
 dotnet tool install --global dotnet-ef
 dotnet tool install Nuke.GlobalTool --global
+
+# add dotnet tools to path
+echo 'export PATH="$PATH:/root/.dotnet/tools"' >> ~/.zshrc

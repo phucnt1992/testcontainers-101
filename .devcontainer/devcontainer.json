@@ -6,14 +6,14 @@
     "service": "app",
     "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
     "features": {
-        "ghcr.io/devcontainers/features/common-utils": {},
         "ghcr.io/devcontainers/features/docker-outside-of-docker": {},
         "ghcr.io/devcontainers/features/git": {},
-        "ghcr.io/devcontainers-contrib/features/zsh-plugins": {
-            "omzPlugins": "https://github.com/zsh-users/zsh-autosuggestions.git https://github.com/zsh-users/zsh-syntax-highlighting.git",
-            "plugins": "zsh-autosuggestions zsh-syntax-highlighting"
+        "ghcr.io/devcontainers/features/dotnet": {
+            "version": "lts"
         },
-        "ghcr.io/stuartleeks/dev-container-features/shell-history": {}
+        "ghcr.io/devcontainers/features/node": {
+            "version": "lts"
+        }
     },
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
     "forwardPorts": [
@@ -43,30 +43,22 @@
     "customizations": {
         "vscode": {
             "extensions": [
-				"adrianwilczynski.namespace",
-				"bierner.markdown-mermaid",
-				"DavidAnson.vscode-markdownlint",
-				"EditorConfig.EditorConfig",
-				"formulahendry.dotnet-test-explorer",
-				"Fudge.auto-using",
-				"humao.rest-client",
-				"josefpihrt-vscode.roslynator",
-				"k--kato.docomment",
-				"kreativ-software.csharpextensions",
-				"mads-hartmann.bash-ide-vscode",
-				"ms-azuretools.vscode-docker",
-				"ms-dotnettools.csharp",
-				"nuke.support",
-				"redhat.vscode-xml",
-				"redhat.vscode-yaml",
-				"ryanluker.vscode-coverage-gutters",
-				"streetsidesoftware.code-spell-checker",
-				"tintoy.msbuild-project-tools",
-				"usernamehw.errorlens",
-				"VisualStudioExptTeam.intellicode-api-usage-examples",
-				"VisualStudioExptTeam.vscodeintellicode",
-				"yzhang.markdown-all-in-one"
-			]
+                "DavidAnson.vscode-markdownlint",
+                "EditorConfig.EditorConfig",
+                "formulahendry.dotnet-test-explorer",
+                "humao.rest-client",
+                "josefpihrt-vscode.roslynator",
+                "k--kato.docomment",
+                "mads-hartmann.bash-ide-vscode",
+                "ms-azuretools.vscode-docker",
+                "ms-dotnettools.csharp",
+                "redhat.vscode-xml",
+                "redhat.vscode-yaml",
+                "ryanluker.vscode-coverage-gutters",
+                "streetsidesoftware.code-spell-checker",
+                "tintoy.msbuild-project-tools",
+                "yzhang.markdown-all-in-one"
+            ]
         }
     }
 }
