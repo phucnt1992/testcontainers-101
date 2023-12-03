@@ -1,10 +1,8 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# linting
-$HOME/.dotnet/tools/nuke lint
+# linting and formatting
+$HOME/.dotnet/tools/nuke lint format
 
-# format files
-$HOME/.dotnet/tools/nuke format
 
 

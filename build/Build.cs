@@ -67,6 +67,7 @@ class Build : NukeBuild
 
     Target Lint => _ => _
         .After(Init)
+        .Before(Format)
         .Executes(() => Solution.GetAllProjects(ProjectPrefix)
             .ForEach(project =>
             {
