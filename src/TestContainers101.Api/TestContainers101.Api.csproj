@@ -16,4 +16,13 @@
     <PackageReference Include="Serilog.AspNetCore" Version="8.*" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference
+      Include="SonarAnalyzer.CSharp"
+      Version="9.*"
+      PrivateAssets="all"
+      Condition="$(MSBuildProjectExtension) == '.csproj'"
+    />
+  </ItemGroup>
+
 </Project>

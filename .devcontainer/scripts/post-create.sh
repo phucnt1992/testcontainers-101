@@ -17,6 +17,9 @@ EOF
 dotnet tool install --global dotnet-ef
 dotnet tool install Nuke.GlobalTool --global
 
+# install npm packages
+npm install && npm run prepare
+
 # add dotnet tools to path
 cat <<EOF >> ~/.zshrc
 path+=(

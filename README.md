@@ -5,7 +5,8 @@
 
 ## Introduction
 
-Test Containers 101 is a simple project to demonstrate how to use Test Containers to test your application with a real database.
+Test Containers 101 project is a simple project to demonstrate how to use
+Test Containers to test your application with a real database.
 
 ## Requirements
 

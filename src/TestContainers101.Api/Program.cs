@@ -46,4 +46,6 @@ app.MapHealthChecks("/_healthz");
 app.Run();
 
 public partial class Program
-{ }
+{
+    protected Program() { }
+}

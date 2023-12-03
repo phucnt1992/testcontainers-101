@@ -4,6 +4,7 @@
         "ASPNETCORE",
         "cobertura",
         "Codecov",
+        "commitlint",
         "devcontainer",
         "Globbing",
         "healthz",
