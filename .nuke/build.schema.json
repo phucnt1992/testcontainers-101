@@ -75,7 +75,9 @@
               "Clean",
               "Compile",
               "DbUpdate",
+              "GenerateTestReport",
               "Recompile",
+              "Reset",
               "Restore",
               "Test",
               "TestWithCoverage"
@@ -95,7 +97,9 @@
               "Clean",
               "Compile",
               "DbUpdate",
+              "GenerateTestReport",
               "Recompile",
+              "Reset",
               "Restore",
               "Test",
               "TestWithCoverage"

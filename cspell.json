@@ -2,7 +2,9 @@
     "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
     "words": [
         "ASPNETCORE",
+        "cobertura",
         "devcontainer",
+        "Globbing",
         "healthz",
         "Hsts",
         "Npgsql",

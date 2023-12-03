@@ -9,7 +9,10 @@
         "ghcr.io/devcontainers/features/docker-outside-of-docker": {},
         "ghcr.io/devcontainers/features/git": {},
         "ghcr.io/devcontainers/features/dotnet": {
-            "version": "lts"
+            "version": "lts",
+            "additionalVersions": [
+                "7.0"
+            ]
         },
         "ghcr.io/devcontainers/features/node": {
             "version": "lts"
@@ -45,15 +48,11 @@
             "extensions": [
                 "DavidAnson.vscode-markdownlint",
                 "EditorConfig.EditorConfig",
-                "formulahendry.dotnet-test-explorer",
                 "humao.rest-client",
                 "josefpihrt-vscode.roslynator",
-                "k--kato.docomment",
                 "mads-hartmann.bash-ide-vscode",
                 "ms-azuretools.vscode-docker",
-                "ms-dotnettools.csharp",
-                "redhat.vscode-xml",
-                "redhat.vscode-yaml",
+                "ms-dotnettools.csdevkit",
                 "ryanluker.vscode-coverage-gutters",
                 "streetsidesoftware.code-spell-checker",
                 "tintoy.msbuild-project-tools",

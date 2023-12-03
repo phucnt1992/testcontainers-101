@@ -8,8 +8,9 @@
         "**/Thumbs.db": true,
         "**/bin": true,
         "**/obj": true,
-    },
-    "files.readonlyExclude": {
         "**/node_modules": true,
     },
+    "files.readonlyInclude": {
+        "**/Migrations/*.cs": true,
+    }
 }

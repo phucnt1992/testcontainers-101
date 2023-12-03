@@ -16,4 +16,18 @@ dotnet tool install --global dotnet-ef
 dotnet tool install Nuke.GlobalTool --global
 
 # add dotnet tools to path
-echo 'export PATH="$PATH:/root/.dotnet/tools"' >> ~/.zshrc
+cat <<EOF >> ~/.zshrc
+path+=(
+    "$HOME/.dotnet/tools"
+)
+EOF
+
+# add nuke complete to zsh
+cat <<EOF >> ~/.zshrc
+_nuke_zsh_complete()
+{
+    local completions=("$(nuke :complete "$words")")
+    reply=( "${(ps:\n:)completions}" )
+}
+compctl -K _nuke_zsh_complete nuke
+EOF
