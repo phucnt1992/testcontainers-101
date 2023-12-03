@@ -23,6 +23,8 @@ builder.Services.AddProblemDetails();
 builder.Host.UseSerilog((context, configuration) => configuration
     .ReadFrom.Configuration(context.Configuration));
 
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
 
 app.UseSerilogRequestLogging();
@@ -38,6 +40,8 @@ if (app.Environment.IsDevelopment())
 
 app.MapGroup("/api/todo-items")
     .MapTodoItemEndpoints();
+
+app.MapHealthChecks("/_healthz");
 
 app.Run();
 

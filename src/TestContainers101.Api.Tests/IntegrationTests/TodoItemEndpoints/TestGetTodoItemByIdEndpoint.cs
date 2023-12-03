@@ -17,7 +17,7 @@ public class TestGetTodoItemByIdEndpoint : IClassFixture<TestWebApplicationFacto
 
     public TestGetTodoItemByIdEndpoint(TestWebApplicationFactory<Program> factory)
     {
-        this._factory = factory;
+        _factory = factory;
     }
 
     public async Task InitializeAsync()
