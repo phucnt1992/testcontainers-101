@@ -5,7 +5,6 @@ using Nuke.Common;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
-using Nuke.Common.Tools.Codecov;
 using Nuke.Common.Tools.Coverlet;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.EntityFramework;
@@ -14,10 +13,10 @@ using Nuke.Common.Utilities.Collections;
 
 [GitHubActions("ci",
     GitHubActionsImage.UbuntuLatest,
+    AutoGenerate = false,
     OnPushBranches = new[] { "main" },
     OnPullRequestBranches = new[] { "main" },
-    ImportSecrets = new[] { "CODECOV_TOKEN" },
-    InvokedTargets = new[] { nameof(TestWithCoverage), nameof(GenerateTestReport), nameof(UploadTestReport) })]
+    InvokedTargets = new[] { nameof(TestWithCoverage) })]
 class Build : NukeBuild
 {
     /// <summary>
@@ -101,14 +100,6 @@ class Build : NukeBuild
             .SetTargetDirectory(RootDirectory / CoverageName)
             .SetReportTypes(ReportTypes.HtmlInline)
         )));
-
-    Target UploadTestReport => _ => _
-        .DependsOn(TestWithCoverage)
-        .Executes(() => Solution.GetAllProjects(TestProjectPostfix)
-            .ForEach(project => CodecovTasks.Codecov(config =>
-                config.AddFiles(project.Directory.GetFiles(CoverageReportFile).Select(x => x.ToString()))
-            )));
-
 
     Target DbUpdate => _ => _
         .DependsOn(Compile)

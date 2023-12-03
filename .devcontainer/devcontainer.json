@@ -48,6 +48,7 @@
             "extensions": [
                 "DavidAnson.vscode-markdownlint",
                 "EditorConfig.EditorConfig",
+                "GitHub.vscode-github-actions",
                 "humao.rest-client",
                 "josefpihrt-vscode.roslynator",
                 "mads-hartmann.bash-ide-vscode",

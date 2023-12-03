@@ -80,8 +80,7 @@
               "Reset",
               "Restore",
               "Test",
-              "TestWithCoverage",
-              "UploadTestReport"
+              "TestWithCoverage"
             ]
           }
         },
@@ -103,8 +102,7 @@
               "Reset",
               "Restore",
               "Test",
-              "TestWithCoverage",
-              "UploadTestReport"
+              "TestWithCoverage"
             ]
           }
         },
