@@ -5,6 +5,7 @@ using Nuke.Common;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
+using Nuke.Common.Tools.Codecov;
 using Nuke.Common.Tools.Coverlet;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.EntityFramework;
@@ -15,7 +16,8 @@ using Nuke.Common.Utilities.Collections;
     GitHubActionsImage.UbuntuLatest,
     OnPushBranches = new[] { "main" },
     OnPullRequestBranches = new[] { "main" },
-    InvokedTargets = new[] { nameof(TestWithCoverage) })]
+    ImportSecrets = new[] { "CODECOV_TOKEN" },
+    InvokedTargets = new[] { nameof(TestWithCoverage), nameof(GenerateTestReport), nameof(UploadTestReport) })]
 class Build : NukeBuild
 {
     /// <summary>
@@ -40,6 +42,7 @@ class Build : NukeBuild
 
     readonly string CoverageName = "coverage";
     string CoveragePrefix => $"{CoverageName}.*";
+    string CoverageReportFile => $"{CoverageName}.cobertura.xml";
 
     Target Clean => _ => _
         .Before(Restore)
@@ -70,16 +73,17 @@ class Build : NukeBuild
         .DependsOn(Clean, Compile);
 
     Target Test => _ => _
-        .DependsOn(Restore)
+        .DependsOn(Compile)
         .Executes(() => Solution.GetAllProjects(TestProjectPostfix)
             .ForEach(project => DotNetTasks.DotNetTest(s => s
                 .SetProjectFile(project)
                 .SetConfiguration(_configuration)
                 .SetNoRestore(true)
+                .SetNoBuild(true)
             )));
 
     Target TestWithCoverage => _ => _
-        .DependsOn(Restore)
+        .DependsOn(Compile)
         .Executes(() => Solution.GetAllProjects(TestProjectPostfix)
             .ForEach(project => DotNetTasks.DotNetTest(s => s
                 .SetProjectFile(project)
@@ -93,10 +97,18 @@ class Build : NukeBuild
         .DependsOn(TestWithCoverage)
         .Executes(() => Solution.GetAllProjects(TestProjectPostfix)
             .ForEach(project => ReportGeneratorTasks.ReportGenerator(s => s
-            .SetReports(project.Directory.GetFiles($"{CoverageName}.cobertura.xml").Select(x => x.ToString()))
+            .SetReports(project.Directory.GetFiles(CoverageReportFile).Select(x => x.ToString()))
             .SetTargetDirectory(RootDirectory / CoverageName)
             .SetReportTypes(ReportTypes.HtmlInline)
         )));
+
+    Target UploadTestReport => _ => _
+        .DependsOn(TestWithCoverage)
+        .Executes(() => Solution.GetAllProjects(TestProjectPostfix)
+            .ForEach(project => CodecovTasks.Codecov(config =>
+                config.AddFiles(project.Directory.GetFiles(CoverageReportFile).Select(x => x.ToString()))
+            )));
+
 
     Target DbUpdate => _ => _
         .DependsOn(Compile)

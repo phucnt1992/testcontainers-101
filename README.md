@@ -1,5 +1,8 @@
 # Testcontainers 101
 
+
+[![ci](https://github.com/phucnt1992/testcontainers-101/actions/workflows/ci.yml/badge.svg)](https://github.com/phucnt1992/testcontainers-101/actions/workflows/ci.yml)
+
 ## Introduction
 
 Test Containers 101 is a simple project to demonstrate how to use Test Containers to test your application with a real database.
