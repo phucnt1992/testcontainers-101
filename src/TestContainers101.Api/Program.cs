@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 using TestContainers101.Api.Endpoints;
+using TestContainers101.Api.Infra.Extensions;
 using TestContainers101.Api.Infra.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,7 +24,7 @@ builder.Services.AddProblemDetails();
 builder.Host.UseSerilog((context, configuration) => configuration
     .ReadFrom.Configuration(context.Configuration));
 
-builder.Services.AddHealthChecks();
+builder.Services.AddDefaultHealthChecks();
 
 var app = builder.Build();
 
@@ -38,10 +39,10 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
+app.MapDefaultHealthChecksGroup("/_healthz");
+
 app.MapGroup("/api/todo-items")
     .MapTodoItemEndpoints();
-
-app.MapHealthChecks("/_healthz");
 
 app.Run();
 

@@ -4,16 +4,10 @@
     "name": "Testcontainers 101",
     "dockerComposeFile": "docker-compose.yml",
     "service": "app",
-    "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+    "workspaceFolder": "/workspace",
     "features": {
         "ghcr.io/devcontainers/features/docker-outside-of-docker": {},
         "ghcr.io/devcontainers/features/git": {},
-        "ghcr.io/devcontainers/features/dotnet": {
-            "version": "lts",
-            "additionalVersions": [
-                "7.0"
-            ]
-        },
         "ghcr.io/devcontainers/features/node": {
             "version": "lts"
         }

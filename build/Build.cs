@@ -107,7 +107,6 @@ class Build : NukeBuild
                 .SetProjectFile(project)
                 .SetConfiguration(_configuration)
                 .SetNoRestore(true)
-                .SetNoBuild(true)
             )));
 
     Target TestWithCoverage => _ => _

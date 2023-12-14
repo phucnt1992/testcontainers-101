@@ -4,15 +4,21 @@ volumes:
   db-data:
   cache-data:
   storage-data:
+  nuget-data:
+  vscode-extensions-data:
+
 
 networks:
   testcontainers-network:
 
+
 services:
   app:
-    image: mcr.microsoft.com/devcontainers/base:ubuntu
+    image: mcr.microsoft.com/devcontainers/dotnet:8.0
     volumes:
-      - ../..:/workspaces:cached
+      - ..:/workspace:cached
+      - vscode-extensions-data:/vscode/vscode-server/extensionsCache
+      - nuget-data:/root/.nuget/packages
     networks:
       - testcontainers-network
     command: sleep infinity
@@ -46,4 +52,3 @@ services:
       - testcontainers-network
     volumes:
       - storage-data:/data
-

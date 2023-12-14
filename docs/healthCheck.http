@@ -1,5 +1,8 @@
 ### Var declaration
 @host = http://localhost:5000
 
-### Get Health Check status
-GET {{host}}/_healthz/
+### Get live status
+GET {{host}}/_healthz/live
+
+### Get ready status
+GET {{host}}/_healthz/ready
