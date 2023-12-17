@@ -45,12 +45,13 @@ jobs:
 
       - name: 'Run: Init, Lint, TestWithCoverage'
         run: |
-          dotnet-sonarscanner begin /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          dotnet-sonarscanner begin /k:"${{ env.PROJECT_KEY }}" /o:"${{ env.ORGANIZATION }}" /d:sonar.host.url="${{ env.SONAR_HOST_URL }}" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
           ./build.sh Init Lint TestWithCoverage
           dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          PROJECT_KEY: phucnt1992_testcontainers-101
+          ORGANIZATION: phucnt1992
+          SONAR_HOST_URL: https://sonarcloud.io
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
