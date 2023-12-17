@@ -10,39 +10,40 @@ using TestContainers101.Api.Infra.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-builder.Services.AddDbContextPool<AppDbContext>(
-    options => options.UseNpgsql(builder.Configuration.GetConnectionString("Db")));
-
-builder.Services.AddValidatorsFromAssemblyContaining<Program>();
-
-builder.Services.AddProblemDetails();
-
+// Config logging
 builder.Host.UseSerilog((context, configuration) => configuration
     .ReadFrom.Configuration(context.Configuration));
 
-builder.Services.AddDefaultHealthChecks();
+// Add services to the container.
+builder.Services.AddDbContextPool<AppDbContext>(
+        options => options.UseNpgsql(builder.Configuration.GetConnectionString("Db")))
+    .AddValidatorsFromAssemblyContaining<Program>()
+    .AddProblemDetails()
+    .AddDefaultHealthChecks();
 
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+}
+
+// Configure the HTTP request pipeline.
 var app = builder.Build();
 
-app.UseSerilogRequestLogging();
-app.UseExceptionHandler();
-app.UseHsts();
-app.UseStatusCodePages();
+app.UseSerilogRequestLogging()
+    .UseExceptionHandler()
+    .UseHsts()
+    .UseStatusCodePages();
 
-#if DEBUG
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
+    app.UseDeveloperExceptionPage()
+        .UseMigrationsEndPoint();
 }
-#endif
 
-app.MapDefaultHealthChecksGroup("/_healthz");
-
-app.MapGroup("/api/todo-items")
-    .MapTodoItemEndpoints();
+// Setup endpoints
+app.MapDefaultHealthChecksGroup("/_healthz")
+    .MapGroup("/api/todo-items")
+        .MapTodoItemEndpoints();
 
 app.Run();
 

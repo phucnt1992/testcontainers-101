@@ -40,9 +40,9 @@ class Build : NukeBuild
 
     readonly string TestProjectPostfix = "*.Tests";
 
-    readonly string CoverageName = "coverage";
-    string CoveragePrefix => $"{CoverageName}.*";
-    string CoverageReportFile => $"{CoverageName}.cobertura.xml";
+    readonly string CoverageFolderName = "coverage";
+    string CoveragePrefix => $"{CoverageFolderName}.*";
+    string CoverageReportFile => $"coverage.xml";
 
     Target Init => _ => _
         .Executes(() => NpmTasks.NpmCi());
@@ -56,7 +56,7 @@ class Build : NukeBuild
 
     Target Reset => _ => _
         .Before(Clean)
-        .Executes(() => RootDirectory.GlobDirectories(CoverageName).DeleteDirectories())
+        .Executes(() => RootDirectory.GlobDirectories(CoverageFolderName).DeleteDirectories())
         .Executes(() => RootDirectory.GlobFiles(CoveragePrefix).DeleteFiles());
 
     Target Restore => _ => _
@@ -117,18 +117,19 @@ class Build : NukeBuild
                 .SetProjectFile(project)
                 .SetConfiguration(_configuration)
                 .SetCollectCoverage(true)
-                .SetCoverletOutputFormat(CoverletOutputFormat.cobertura)
+                .SetCoverletOutputFormat(CoverletOutputFormat.opencover)
+                .SetCoverletOutput(RootDirectory / CoverageFolderName / CoverageReportFile)
                 .SetExcludeByFile("**/Migrations/*.cs")
                 .SetNoRestore(true)
             )));
-    Target GenerateTestReport => _ => _
+
+    Target GenerateHtmlTestReport => _ => _
         .DependsOn(TestWithCoverage)
-        .Executes(() => Solution.GetAllProjects(TestProjectPostfix)
-            .ForEach(project => ReportGeneratorTasks.ReportGenerator(s => s
-            .SetReports(project.Directory.GetFiles(CoverageReportFile).Select(x => x.ToString()))
-            .SetTargetDirectory(RootDirectory / CoverageName)
-            .SetReportTypes(ReportTypes.HtmlInline)
-        )));
+        .Executes(() => ReportGeneratorTasks.ReportGenerator(s => s
+                .SetReports(RootDirectory / CoverageFolderName / CoverageReportFile)
+                .SetTargetDirectory(RootDirectory / CoverageFolderName)
+                .SetReportTypes(ReportTypes.HtmlInline)
+        ));
 
     Target DbUpdate => _ => _
         .DependsOn(Compile)

@@ -10,6 +10,8 @@
         "healthz",
         "Hsts",
         "Npgsql",
+        "opencover",
+        "Qube",
         "Serilog",
         "Testcontainer",
         "Testcontainers",
