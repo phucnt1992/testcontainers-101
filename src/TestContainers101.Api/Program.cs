@@ -21,10 +21,12 @@ builder.Services.AddDbContextPool<AppDbContext>(
     .AddProblemDetails()
     .AddDefaultHealthChecks();
 
+#if DEBUG
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 }
+#endif
 
 // Configure the HTTP request pipeline.
 var app = builder.Build();
@@ -34,11 +36,13 @@ app.UseSerilogRequestLogging()
     .UseHsts()
     .UseStatusCodePages();
 
+#if DEBUG
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage()
         .UseMigrationsEndPoint();
 }
+#endif
 
 // Setup endpoints
 app.MapDefaultHealthChecksGroup("/_healthz")

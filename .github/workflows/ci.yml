@@ -33,7 +33,7 @@ jobs:
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
         with:
-          path: ~\sonar\cache
+          path: ~\.sonar\cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
@@ -63,10 +63,3 @@ jobs:
           ORGANIZATION: phucnt1992
           SONAR_HOST_URL: https://sonarcloud.io
           ASPNETCORE_ENVIRONMENT: CI
-
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          directory: src/TestContainers101.Api.Tests
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
