@@ -8,17 +8,15 @@ using TestContainers101.Api.Tests.Extensions;
 using TestContainers101.Api.Tests.Fakers;
 using TestContainers101.Api.Tests.Fixtures;
 
-public class TestDeleteTodoItemByIdEndpoint : IClassFixture<TestWebApplicationFactory<Program>>, IAsyncLifetime
+public class TestDeleteTodoItemByIdEndpoint(TestWebApplicationFactory<Program> factory) : IClassFixture<TestWebApplicationFactory<Program>>, IAsyncLifetime
 {
-    private readonly TestWebApplicationFactory<Program> _factory;
+    private readonly TestWebApplicationFactory<Program> _factory = factory.WithDbContainer();
     private readonly TodoItemFaker _faker = new();
 
-    public TestDeleteTodoItemByIdEndpoint(TestWebApplicationFactory<Program> factory)
-    {
-        this._factory = factory;
-    }
     public async Task InitializeAsync()
     {
+        await _factory.StartContainersAsync();
+
         var todoItems = _faker.Generate(1);
 
         await _factory.EnsureCreatedAndPopulateDataAsync(todoItems);

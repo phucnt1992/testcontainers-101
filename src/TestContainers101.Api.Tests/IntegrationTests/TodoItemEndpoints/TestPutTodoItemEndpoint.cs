@@ -44,18 +44,15 @@ class InvalidPutData : TheoryData<object>
     }
 }
 
-public class TestPutTodoItemEndpoint : IClassFixture<TestWebApplicationFactory<Program>>, IAsyncLifetime
+public class TestPutTodoItemEndpoint(TestWebApplicationFactory<Program> factory) : IClassFixture<TestWebApplicationFactory<Program>>, IAsyncLifetime
 {
-    private readonly TestWebApplicationFactory<Program> _factory;
+    private readonly TestWebApplicationFactory<Program> _factory = factory.WithDbContainer();
     private readonly TodoItemFaker _faker = new();
-
-    public TestPutTodoItemEndpoint(TestWebApplicationFactory<Program> factory)
-    {
-        this._factory = factory;
-    }
 
     public async Task InitializeAsync()
     {
+        await _factory.StartContainersAsync();
+
         var todoItems = _faker.Generate(1);
         await _factory.EnsureCreatedAndPopulateDataAsync(todoItems);
     }
@@ -95,7 +92,7 @@ public class TestPutTodoItemEndpoint : IClassFixture<TestWebApplicationFactory<P
     [InlineData(-1)]
     [InlineData(0)]
     [InlineData(99)]
-    public async Task ShouldReturnNotFoundWhenTodoItemIdDoesNotExist(long todoItemId)
+    public async Task ShouldReturnNotFound_WhenTodoItemIdDoesNotExist(long todoItemId)
     {
         // Arrange
         var client = _factory.CreateClient();
@@ -116,7 +113,7 @@ public class TestPutTodoItemEndpoint : IClassFixture<TestWebApplicationFactory<P
 
     [Theory(DisplayName = "Should return bad request with invalid data")]
     [ClassData(typeof(InvalidPutData))]
-    public async Task ShouldReturnBadRequestWhenTodoItemIsInvalid(object data)
+    public async Task ShouldReturnBadRequest_WhenTodoItemIsInvalid(object data)
     {
         // Arrange
         var client = _factory.CreateClient();

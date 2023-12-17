@@ -1,60 +1,85 @@
-namespace TestContainers101.Api.Tests.Fixtures;
+using DotNet.Testcontainers.Containers;
 
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-
-using Polly;
 
 using Testcontainers.PostgreSql;
+using Testcontainers.Redis;
 
-using TestContainers101.Api.Infra.Persistence;
 using TestContainers101.Api.Tests.Extensions;
 
+namespace TestContainers101.Api.Tests.Fixtures;
 public class TestWebApplicationFactory<TProgram>
     : WebApplicationFactory<TProgram>, IAsyncLifetime where TProgram : class
 {
-    private readonly PostgreSqlContainer _container;
+    private readonly List<IContainer> _containers = [];
 
-    public TestWebApplicationFactory()
+    public WebApplicationFactory<TProgram> Instance { get; private set; } = default!;
+
+    public new Task DisposeAsync()
     {
-        _container = new PostgreSqlBuilder()
+        return Task
+            .WhenAll(_containers.Select(container => container.DisposeAsync().AsTask()))
+            .ContinueWith(async task => await base.DisposeAsync());
+    }
+
+    public Task InitializeAsync()
+    {
+        Instance = WithWebHostBuilder(builder => builder.UseEnvironment("Test"));
+
+        return Task.CompletedTask;
+    }
+
+    public TestWebApplicationFactory<TProgram> WithCacheContainer()
+    {
+        _containers.Add(new RedisBuilder()
+            .WithName($"test_cache_{Guid.NewGuid()}")
+            .WithImage("redis:alpine")
+            .WithCleanUp(true)
+            .Build());
+
+        return this;
+    }
+
+    public TestWebApplicationFactory<TProgram> WithDbContainer()
+    {
+        _containers.Add(new PostgreSqlBuilder()
             .WithDatabase($"test_db_{Guid.NewGuid()}")
             .WithUsername("postgres")
             .WithPassword("postgres")
             .WithImage("postgres:alpine")
             .WithCleanUp(true)
-            .Build();
+            .Build());
+
+        return this;
     }
 
-    protected override IHost CreateHost(IHostBuilder builder)
+    public async Task StartContainersAsync()
     {
-        builder.ConfigureServices(services => services
-                .RemoveDbContext<AppDbContext>()
-                .AddPooledDbContextFactory<AppDbContext>(options =>
-                    options.UseNpgsql(_container.GetConnectionString())));
+        // Do nothing if no containers
+        if (_containers.Count == 0)
+        {
+            return;
+        }
 
-        return base.CreateHost(builder);
-    }
+        // Start all containers
+        await Task.WhenAll(_containers.Select(container => container.StartWithWaitAndRetryAsync()));
 
-    public new async Task DisposeAsync()
-    {
-        await _container.DisposeAsync();
-        await base.DisposeAsync();
-    }
-
-    public async Task InitializeAsync()
-    {
-        var policy = Policy
-            .Handle<AggregateException>()
-            .WaitAndRetryAsync(new[]
+        // Update Settings for each container
+        Instance = _containers.Aggregate(this as WebApplicationFactory<TProgram>, (current, container) => current.WithWebHostBuilder(builder =>
+        {
+            switch (container)
             {
-                    TimeSpan.FromSeconds(1),
-                    TimeSpan.FromSeconds(3),
-                    TimeSpan.FromSeconds(6)
-            });
+                case PostgreSqlContainer dbContainer:
+                    builder.UseSetting("ConnectionStrings:Db", dbContainer.GetConnectionString());
+                    break;
 
-        await policy.ExecuteAsync(_container.StartAsync, default);
+                case RedisContainer cacheContainer:
+                    builder.UseSetting("ConnectionStrings:Cache", cacheContainer.GetConnectionString());
+                    break;
+            }
+        }));
     }
+
+    public new HttpClient CreateClient() => Instance.CreateClient();
 }

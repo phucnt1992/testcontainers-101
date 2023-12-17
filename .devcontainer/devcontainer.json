@@ -10,6 +10,9 @@
         "ghcr.io/devcontainers/features/git": {},
         "ghcr.io/devcontainers/features/node": {
             "version": "lts"
+        },
+        "ghcr.io/devcontainers/features/java": {
+            "version": "latest"
         }
     },
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
@@ -49,6 +52,7 @@
                 "ms-azuretools.vscode-docker",
                 "ms-dotnettools.csdevkit",
                 "ryanluker.vscode-coverage-gutters",
+                "SonarSource.sonarlint-vscode",
                 "streetsidesoftware.code-spell-checker",
                 "tintoy.msbuild-project-tools",
                 "yzhang.markdown-all-in-one"

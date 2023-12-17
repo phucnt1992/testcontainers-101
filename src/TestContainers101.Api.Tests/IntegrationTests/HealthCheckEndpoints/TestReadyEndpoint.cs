@@ -6,17 +6,29 @@ using FluentAssertions;
 
 using TestContainers101.Api.Tests.Fixtures;
 
-public class TestReadyEndpoint : IClassFixture<TestWebApplicationFactory<Program>>
+public class TestReadyEndpoint(TestWebApplicationFactory<Program> factory) : IClassFixture<TestWebApplicationFactory<Program>>
 {
-    private readonly TestWebApplicationFactory<Program> _factory;
-
-    public TestReadyEndpoint(TestWebApplicationFactory<Program> factory)
-    {
-        _factory = factory;
-    }
+    private readonly TestWebApplicationFactory<Program> _factory = factory;
 
     [Fact]
     public async Task ShouldReturn200()
+    {
+        // Arrange
+        await _factory.WithDbContainer()
+            .WithCacheContainer()
+            .StartContainersAsync();
+
+        var client = _factory.CreateClient();
+
+        // Act
+        var response = await client.GetAsync("/_healthz/ready");
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task ShouldReturn503_WhenDatabaseIsNotReady()
     {
         // Arrange
         var client = _factory.CreateClient();
@@ -25,7 +37,6 @@ public class TestReadyEndpoint : IClassFixture<TestWebApplicationFactory<Program
         var response = await client.GetAsync("/_healthz/ready");
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-
+        response.StatusCode.Should().Be(HttpStatusCode.ServiceUnavailable);
     }
 }

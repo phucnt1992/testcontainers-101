@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 
+using TestContainers101.Api.Infra.Diagnostics.HealthChecks;
 using TestContainers101.Api.Infra.Persistence;
 
 namespace TestContainers101.Api.Infra.Extensions;
@@ -10,9 +10,7 @@ public static class HealthChecksExtensions
     public static IServiceCollection AddDefaultHealthChecks(this IServiceCollection services)
     {
         services.AddHealthChecks()
-            .AddCheck("self", () => HealthCheckResult.Healthy(), tags: ["live"]);
-
-        services.AddHealthChecks()
+            .AddCheck<ConfigurationHealthCheck>("conf", tags: ["live"])
             .AddDbContextCheck<AppDbContext>("db", tags: ["ready"]);
 
         return services;

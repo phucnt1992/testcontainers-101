@@ -12,10 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddPooledDbContextFactory<AppDbContext>(
-    options => options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
-
-builder.Services.AddScoped(p => p.GetRequiredService<IDbContextFactory<AppDbContext>>().CreateDbContext());
+builder.Services.AddDbContextPool<AppDbContext>(
+    options => options.UseNpgsql(builder.Configuration.GetConnectionString("Db")));
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 

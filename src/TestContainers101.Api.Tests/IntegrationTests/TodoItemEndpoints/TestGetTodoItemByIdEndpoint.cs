@@ -10,18 +10,15 @@ using TestContainers101.Api.Tests.Extensions;
 using TestContainers101.Api.Tests.Fakers;
 using TestContainers101.Api.Tests.Fixtures;
 
-public class TestGetTodoItemByIdEndpoint : IClassFixture<TestWebApplicationFactory<Program>>, IAsyncLifetime
+public class TestGetTodoItemByIdEndpoint(TestWebApplicationFactory<Program> factory) : IClassFixture<TestWebApplicationFactory<Program>>, IAsyncLifetime
 {
-    private readonly TestWebApplicationFactory<Program> _factory;
+    private readonly TestWebApplicationFactory<Program> _factory = factory.WithDbContainer();
     private readonly TodoItemFaker _faker = new();
-
-    public TestGetTodoItemByIdEndpoint(TestWebApplicationFactory<Program> factory)
-    {
-        _factory = factory;
-    }
 
     public async Task InitializeAsync()
     {
+        await _factory.StartContainersAsync();
+
         var todoItems = _faker.Generate(1);
         await _factory.EnsureCreatedAndPopulateDataAsync(todoItems);
     }

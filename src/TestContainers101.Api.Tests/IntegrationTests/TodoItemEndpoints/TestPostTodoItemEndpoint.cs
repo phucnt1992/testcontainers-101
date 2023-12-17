@@ -43,16 +43,13 @@ class InvalidPostData : TheoryData<object>
     }
 }
 
-public class TestPostTodoItemEndpoint : IClassFixture<TestWebApplicationFactory<Program>>, IAsyncLifetime
+public class TestPostTodoItemEndpoint(TestWebApplicationFactory<Program> factory) : IClassFixture<TestWebApplicationFactory<Program>>, IAsyncLifetime
 {
-    private readonly TestWebApplicationFactory<Program> _factory;
+    private readonly TestWebApplicationFactory<Program> _factory = factory.WithDbContainer();
 
-    public TestPostTodoItemEndpoint(TestWebApplicationFactory<Program> factory)
-    {
-        this._factory = factory;
-    }
     public async Task InitializeAsync()
     {
+        await _factory.StartContainersAsync();
         await _factory.EnsureCreatedAsync();
     }
 
