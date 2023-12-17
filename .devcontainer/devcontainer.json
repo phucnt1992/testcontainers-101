@@ -12,7 +12,8 @@
             "version": "lts"
         },
         "ghcr.io/devcontainers/features/java": {
-            "version": "latest"
+            "version": "latest",
+            "jdkDistro": "ms"
         }
     },
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
