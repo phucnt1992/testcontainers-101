@@ -18,10 +18,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
+        with:
+          path: ~\sonar\cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Install SonarCloud scanners
+        run: |
+          dotnet tool install --global dotnet-sonarscanner
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -38,7 +44,13 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj', '**/Directory.Packages.props') }}
 
       - name: 'Run: Init, Lint, TestWithCoverage'
-        run: ./build.cmd Init Lint TestWithCoverage
+        run: |
+          dotnet-sonarscanner begin /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          ./build.sh Init Lint TestWithCoverage
+          dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
