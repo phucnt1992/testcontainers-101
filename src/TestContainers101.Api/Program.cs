@@ -31,11 +31,13 @@ app.UseExceptionHandler();
 app.UseHsts();
 app.UseStatusCodePages();
 
+#if DEBUG
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
+#endif
 
 app.MapDefaultHealthChecksGroup("/_healthz");
 

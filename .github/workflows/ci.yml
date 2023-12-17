@@ -51,9 +51,13 @@ jobs:
 
       - name: 'Run: Init, Lint, TestWithCoverage'
         run: |
-          dotnet-sonarscanner begin /k:"${{ env.PROJECT_KEY }}" /o:"${{ env.ORGANIZATION }}" /d:sonar.host.url="${{ env.SONAR_HOST_URL }}" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          dotnet-sonarscanner begin /k:"${{ env.PROJECT_KEY }}" \
+            /o:"${{ env.ORGANIZATION }}" \
+            /d:sonar.host.url="${{ env.SONAR_HOST_URL }}" \
+            /d:sonar.cs.opencover.reportsPaths=src/TestContainers101.Api.Tests/coverage.cobertura.xml \
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
           ./build.sh Init Lint TestWithCoverage
-          dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
         env:
           PROJECT_KEY: phucnt1992_testcontainers-101
           ORGANIZATION: phucnt1992
