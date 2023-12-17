@@ -14,7 +14,12 @@ public class TestLiveEndpoint(WebApplicationFactory<Program> factory) : IClassFi
     public async Task ShouldReturn200()
     {
         // Arrange
-        var client = _factory.CreateClient();
+        var client = _factory
+            .WithWebHostBuilder(builder =>
+            {
+                builder.UseSetting("ConnectionStrings:Db", "Host=localhost;Port=5432;Database=test_db;Username=postgres;Password=postgres");
+                builder.UseSetting("ConnectionStrings:Cache", "localhost:6379");
+            }).CreateClient();
 
         // Act
         var response = await client.GetAsync("/_healthz/live");

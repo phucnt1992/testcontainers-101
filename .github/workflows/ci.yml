@@ -62,6 +62,7 @@ jobs:
           PROJECT_KEY: phucnt1992_testcontainers-101
           ORGANIZATION: phucnt1992
           SONAR_HOST_URL: https://sonarcloud.io
+          ASPNETCORE_ENVIRONMENT: CI
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3

@@ -1,7 +1,10 @@
+using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
@@ -25,7 +28,14 @@ public class TestWebApplicationFactory<TProgram>
 
     public Task InitializeAsync()
     {
-        Instance = WithWebHostBuilder(builder => builder.UseEnvironment("Test"));
+        var envName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Test";
+        Instance = WithWebHostBuilder(builder => builder.UseEnvironment(envName));
+
+        // Disable Testcontainers logs if CI environment
+        if (envName.Equals("CI", StringComparison.OrdinalIgnoreCase))
+        {
+            TestcontainersSettings.Logger = new NullLogger<ILoggerFactory>();
+        }
 
         return Task.CompletedTask;
     }
