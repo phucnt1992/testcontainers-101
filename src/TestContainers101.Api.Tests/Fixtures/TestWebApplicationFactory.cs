@@ -64,7 +64,7 @@ public class TestWebApplicationFactory<TProgram>
         return this;
     }
 
-    public async Task StartContainersAsync()
+    public async Task StartContainersAsync(CancellationToken cancellationToken = default)
     {
         // Do nothing if no containers
         if (_containers.Count == 0)
@@ -73,7 +73,7 @@ public class TestWebApplicationFactory<TProgram>
         }
 
         // Start all containers
-        await Task.WhenAll(_containers.Select(container => container.StartWithWaitAndRetryAsync()));
+        await Task.WhenAll(_containers.Select(container => container.StartWithWaitAndRetryAsync(cancellationToken: cancellationToken)));
 
         // Update Settings for each container
         Instance = _containers.Aggregate(this as WebApplicationFactory<TProgram>, (current, container) => current.WithWebHostBuilder(builder =>
@@ -92,4 +92,18 @@ public class TestWebApplicationFactory<TProgram>
     }
 
     public new HttpClient CreateClient() => Instance.CreateClient();
+
+    public async Task StopContainersAsync()
+    {
+        // Do nothing if no containers
+        if (_containers.Count == 0)
+        {
+            return;
+        }
+        await Task.WhenAll(_containers.Select(container => container.DisposeAsync().AsTask()))
+            .ContinueWith(async _ => await Instance.DisposeAsync())
+            .ContinueWith(async _ => await InitializeAsync());
+
+        _containers.Clear();
+    }
 }

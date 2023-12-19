@@ -29,31 +29,14 @@ public class TestLiveEndpoint(WebApplicationFactory<Program> factory) : IClassFi
 
     }
 
-    [Fact]
-    public async Task ShouldReturn503_WhenDbConnectionStringIsEmpty()
+    [Theory]
+    [InlineData("ConnectionStrings:Db")]
+    [InlineData("ConnectionStrings:Cache")]
+    public async Task ShouldReturn503_WhenConnectionStringIsEmpty(string key)
     {
         // Arrange
         var client = _factory
-            .WithWebHostBuilder(builder => builder
-                .UseSetting("ConnectionStrings:Db", string.Empty)
-                .UseSetting("ConnectionStrings:Cache", "localhost:6379"))
-            .CreateClient();
-
-        // Act
-        var response = await client.GetAsync("/_healthz/live");
-
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.ServiceUnavailable);
-    }
-
-    [Fact]
-    public async Task ShouldReturn503_WhenCacheConnectionStringIsEmpty()
-    {
-        // Arrange
-        var client = _factory
-            .WithWebHostBuilder(builder => builder
-                .UseSetting("ConnectionStrings:Db", "Host=localhost;Port=5432;Database=test_db;Username=postgres;Password=postgres")
-                .UseSetting("ConnectionStrings:Cache", string.Empty))
+            .WithWebHostBuilder(builder => builder.UseSetting(key, string.Empty))
             .CreateClient();
 
         // Act

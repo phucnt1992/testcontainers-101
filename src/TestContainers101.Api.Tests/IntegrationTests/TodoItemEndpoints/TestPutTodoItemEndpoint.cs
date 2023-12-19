@@ -59,7 +59,7 @@ public class TestPutTodoItemEndpoint(TestWebApplicationFactory<Program> factory)
 
     public async Task DisposeAsync()
     {
-        await _factory.EnsureDeletedAsync();
+        await _factory.StopContainersAsync();
     }
 
 

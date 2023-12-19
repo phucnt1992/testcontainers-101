@@ -6,10 +6,14 @@ using Polly;
 
 public static class TestContainersExtensions
 {
-    public static Task StartWithWaitAndRetryAsync(this IContainer container, int retryCount = 3, int retryDelay = 3)
+    public static Task StartWithWaitAndRetryAsync(
+        this IContainer container,
+        int retryCount = 3,
+        int retryDelay = 3,
+        CancellationToken cancellationToken = default)
         => Policy
             .Handle<AggregateException>()
             .Or<InvalidOperationException>()
             .WaitAndRetryAsync(retryCount, _ => TimeSpan.FromSeconds(retryCount * retryDelay))
-            .ExecuteAsync(async () => await container.StartAsync());
+            .ExecuteAsync(container.StartAsync, cancellationToken);
 }

@@ -6,25 +6,34 @@ using FluentAssertions;
 
 using TestContainers101.Api.Tests.Fixtures;
 
-public class TestReadyEndpoint(TestWebApplicationFactory<Program> factory) : IClassFixture<TestWebApplicationFactory<Program>>
+public class TestReadyEndpoint(TestWebApplicationFactory<Program> factory)
+    : IClassFixture<TestWebApplicationFactory<Program>>
 {
     private readonly TestWebApplicationFactory<Program> _factory = factory;
 
     [Fact]
     public async Task ShouldReturn200()
     {
-        // Arrange
-        await _factory.WithDbContainer()
-            .WithCacheContainer()
-            .StartContainersAsync();
+        try
+        {
+            // Arrange
+            await _factory
+                .WithDbContainer()
+                .WithCacheContainer()
+                .StartContainersAsync();
 
-        var client = _factory.CreateClient();
+            var client = _factory.CreateClient();
 
-        // Act
-        var response = await client.GetAsync("/_healthz/ready");
+            // Act
+            var response = await client.GetAsync("/_healthz/ready");
 
-        // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+        }
+        finally
+        {
+            await _factory.StopContainersAsync();
+        }
     }
 
     [Fact]

@@ -15,14 +15,6 @@ public static class TestWebApplicationFactoryExtensions
         await dbContext.Database.EnsureCreatedAsync(cancellationToken);
     }
 
-    public static async Task EnsureDeletedAsync<T>(this TestWebApplicationFactory<T> factory, CancellationToken cancellationToken = default) where T : class
-    {
-        await using var scope = factory.Instance.Services.CreateAsyncScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-        await dbContext.Database.EnsureDeletedAsync(cancellationToken);
-    }
-
     public static async Task EnsureCreatedAndPopulateDataAsync<TProgram, TEntity>(this TestWebApplicationFactory<TProgram> factory, IReadOnlyCollection<TEntity> entities, CancellationToken cancellationToken = default)
         where TProgram : class
         where TEntity : class

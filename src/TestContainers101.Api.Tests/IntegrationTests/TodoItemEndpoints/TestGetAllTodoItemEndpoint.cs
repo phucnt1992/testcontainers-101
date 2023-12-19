@@ -25,7 +25,7 @@ public class TestGetAllTodoItemEndpoint(TestWebApplicationFactory<Program> facto
 
     public async Task DisposeAsync()
     {
-        await _factory.EnsureDeletedAsync();
+        await _factory.StopContainersAsync();
     }
 
     [Fact]
