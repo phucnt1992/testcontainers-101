@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Add the current directory to the safe list
-git config --global --add safe.directory /workspaces/$(basename $PWD)
-
 # ignoredups for history
 cat <<EOF >> ~/.zshrc
 setopt HIST_EXPIRE_DUPS_FIRST

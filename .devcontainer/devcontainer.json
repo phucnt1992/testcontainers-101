@@ -56,7 +56,8 @@
                 "SonarSource.sonarlint-vscode",
                 "streetsidesoftware.code-spell-checker",
                 "tintoy.msbuild-project-tools",
-                "yzhang.markdown-all-in-one"
+                "yzhang.markdown-all-in-one",
+                "ms-azuretools.vscode-azurefunctions"
             ]
         }
     }
