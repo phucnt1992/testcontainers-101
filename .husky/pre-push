@@ -1,4 +1,9 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+# ignore if there is not md or cs files
+if ! git diff --cached --name-only --diff-filter=ACM | grep -qE '(\.md$)|(\.cs$)'; then
+  exit 0
+fi
+
 $HOME/.dotnet/tools/nuke test
