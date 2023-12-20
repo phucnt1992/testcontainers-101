@@ -6,32 +6,43 @@ using DotNet.Testcontainers.Images;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
+using Testcontainers.Azurite;
+
 
 namespace TestContainers101.Function.Tests.Fixtures;
-public class FunctionContainersFactory : IAsyncLifetime
+public class FunctionContainerFactory : IAsyncLifetime
 {
 
     private readonly IFutureDockerImage _image;
+    private AzuriteContainer _storageContainer = default!;
+    private IContainer _functionContainer = default!;
 
-    public FunctionContainersFactory()
+    private const int FunctionPublicPort = 80;
+
+
+    public FunctionContainerFactory()
     {
         _image = new ImageFromDockerfileBuilder()
             .WithDockerfileDirectory(CommonDirectoryPath.GetSolutionDirectory(), "src/TestContainers101.Function")
             .WithBuildArgument(
-                "RESOURCE_REAPER_SESSION_ID"
+                "RESOURCE_REAPER_SESSION_ID",
                 ResourceReaper.DefaultSessionId.ToString("D")
             )
+            .WithDockerfile("Dockerfile.Testing")
+            .WithCleanUp(true)
             .Build();
     }
 
-    public new Task DisposeAsync()
+    public Task DisposeAsync()
     {
-        return Task
-            .WhenAll(_containers.Select(container => container.DisposeAsync().AsTask()))
-            .ContinueWith(async task => await base.DisposeAsync());
+        return Task.WhenAll(
+            _functionContainer.DisposeAsync().AsTask(),
+            _storageContainer.DisposeAsync().AsTask()
+        )
+        .ContinueWith(_ => _image.DisposeAsync());
     }
 
-    public Task InitializeAsync()
+    public async Task InitializeAsync()
     {
         var envName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Test";
 
@@ -43,25 +54,47 @@ public class FunctionContainersFactory : IAsyncLifetime
 
         await _image.CreateAsync();
 
+        await WithStorageContainer()
+            ._storageContainer.StartAsync();
+
+        await WithFunctionContainer()
+            ._functionContainer.StartAsync();
 
     }
 
-    public TestWebApplicationFactory<TProgram> WithStorageContainer()
+    private FunctionContainerFactory WithStorageContainer()
     {
-        new
+        _storageContainer = new AzuriteBuilder()
+            .WithPortBinding(10000, true)
+            .Build();
 
         return this;
     }
 
-    public async Task StartContainersAsync(CancellationToken cancellationToken = default)
+    private FunctionContainerFactory WithFunctionContainer()
     {
+        _functionContainer = new ContainerBuilder()
+            .WithImage(_image)
+            .WithPortBinding(FunctionPublicPort, true)
+            .WithWaitStrategy(
+                Wait.ForUnixContainer()
+                    .UntilHttpRequestIsSucceeded(r => r.ForPort(FunctionPublicPort))
+            )
+            .WithEnvironment("AzureWebJobsStorage", _storageContainer.GetConnectionString())
+            .DependsOn(_storageContainer)
+            .Build();
 
+        return this;
     }
 
-    public new HttpClient CreateClient() => Instance.CreateClient();
-
-    public async Task StopContainersAsync()
+    public HttpClient CreateClient()
     {
-
+        var client = new HttpClient
+        {
+            BaseAddress = new Uri(
+                $"{Uri.UriSchemeHttp}://{_functionContainer.Hostname}:{_functionContainer.GetMappedPublicPort(FunctionPublicPort)}")
+        };
+        return client;
     }
+
 }
