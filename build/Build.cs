@@ -35,11 +35,12 @@ class Build : NukeBuild
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration _configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
-    readonly string ProjectName = "TestContainers101.Api";
+    readonly string ProjectName = "TestContainers101.*";
     string ProjectPrefix => $"{ProjectName}*";
 
     readonly string TestProjectPostfix = "*.Tests";
-
+    readonly string TestWithCoverageSupportProjectPostfix = "*.Api.Tests";
+    readonly string TestWithoutCoverageSupportProjectPostfix = "*.Function.Tests";
     readonly string CoverageFolderName = "coverage";
     string CoveragePrefix => $"{CoverageFolderName}.*";
     string CoverageReportFile => $"coverage.xml";
@@ -112,7 +113,9 @@ class Build : NukeBuild
     Target TestWithCoverage => _ => _
         .DependsOn(Compile)
         .After(Lint)
-        .Executes(() => Solution.GetAllProjects(TestProjectPostfix)
+        .Executes(() =>
+        {
+            Solution.GetAllProjects(TestWithCoverageSupportProjectPostfix)
             .ForEach(project => DotNetTasks.DotNetTest(s => s
                 .SetProjectFile(project)
                 .SetConfiguration(_configuration)
@@ -121,7 +124,21 @@ class Build : NukeBuild
                 .SetCoverletOutput(RootDirectory / CoverageFolderName / CoverageReportFile)
                 .SetExcludeByFile("**/Migrations/*.cs")
                 .SetNoRestore(true)
-            )));
+            ));
+        });
+
+    Target TestWithoutCoverage => _ => _
+        .DependsOn(Compile)
+        .After(Lint)
+        .Executes(() =>
+        {
+            Solution.GetAllProjects(TestWithoutCoverageSupportProjectPostfix)
+            .ForEach(project => DotNetTasks.DotNetTest(s => s
+                .SetProjectFile(project)
+                .SetConfiguration(_configuration)
+                .SetNoRestore(true)
+            ));
+        });
 
     Target GenerateHtmlTestReport => _ => _
         .DependsOn(TestWithCoverage)

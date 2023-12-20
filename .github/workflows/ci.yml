@@ -56,7 +56,7 @@ jobs:
             /d:sonar.host.url="${{ env.SONAR_HOST_URL }}" \
             /d:sonar.cs.opencover.reportsPaths=**/coverage.xml \
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
-          ./build.sh Init Lint TestWithCoverage
+          ./build.sh Init Lint TestWithCoverage TestWithoutCoverage
           dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
         env:
           PROJECT_KEY: phucnt1992_testcontainers-101
