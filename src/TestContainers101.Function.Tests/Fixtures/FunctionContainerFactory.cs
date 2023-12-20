@@ -1,20 +1,28 @@
+using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
+using DotNet.Testcontainers.Images;
 
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
-using Testcontainers.PostgreSql;
-using Testcontainers.Redis;
-
 
 namespace TestContainers101.Function.Tests.Fixtures;
-public class FunctionContainersFactory IAsyncLifetime : class
+public class FunctionContainersFactory : IAsyncLifetime
 {
-    private readonly List<IContainer> _containers = [];
-    private readonly Image
+
+    private readonly IFutureDockerImage _image;
+
+    public FunctionContainersFactory()
+    {
+        _image = new ImageFromDockerfileBuilder()
+            .WithDockerfileDirectory(CommonDirectoryPath.GetSolutionDirectory(), "src/TestContainers101.Function")
+            .WithBuildArgument(
+                "RESOURCE_REAPER_SESSION_ID"
+                ResourceReaper.DefaultSessionId.ToString("D")
+            )
+            .Build();
+    }
 
     public new Task DisposeAsync()
     {
@@ -33,13 +41,14 @@ public class FunctionContainersFactory IAsyncLifetime : class
             TestcontainersSettings.Logger = new NullLogger<ILoggerFactory>();
         }
 
-        var image = new I
+        await _image.CreateAsync();
+
 
     }
 
     public TestWebApplicationFactory<TProgram> WithStorageContainer()
     {
-
+        new
 
         return this;
     }
