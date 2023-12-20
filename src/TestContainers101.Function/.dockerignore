@@ -1,0 +1,4 @@
+local.settings.json
+Dockerfile*
+**/[Oo]bj/
+**/[Bb]in/

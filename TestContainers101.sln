@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestContainers101.Api.Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{E63A15AB-BB08-4F2D-8CD9-BFF07BE405BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestContainers101.Function", "src\TestContainers101.Function\TestContainers101.Function.csproj", "{4AF615BC-3692-4226-9812-C46D6C9D2397}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestContainers101.Function.Tests", "src\TestContainers101.Function.Tests\TestContainers101.Function.Tests.csproj", "{AF5300A4-2460-4292-BAE6-231CEF080CDD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,9 +34,19 @@ Global
 		{166B6709-8D4E-4158-920D-D5940E5D5CEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{166B6709-8D4E-4158-920D-D5940E5D5CEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{166B6709-8D4E-4158-920D-D5940E5D5CEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AF615BC-3692-4226-9812-C46D6C9D2397}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AF615BC-3692-4226-9812-C46D6C9D2397}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AF615BC-3692-4226-9812-C46D6C9D2397}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AF615BC-3692-4226-9812-C46D6C9D2397}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF5300A4-2460-4292-BAE6-231CEF080CDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF5300A4-2460-4292-BAE6-231CEF080CDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF5300A4-2460-4292-BAE6-231CEF080CDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF5300A4-2460-4292-BAE6-231CEF080CDD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{EFCA9E71-621F-4161-BBA6-7AFC00052DCE} = {48252158-266E-4793-8FB5-5CD74BEA36EC}
 		{166B6709-8D4E-4158-920D-D5940E5D5CEA} = {48252158-266E-4793-8FB5-5CD74BEA36EC}
+		{4AF615BC-3692-4226-9812-C46D6C9D2397} = {48252158-266E-4793-8FB5-5CD74BEA36EC}
+		{AF5300A4-2460-4292-BAE6-231CEF080CDD} = {48252158-266E-4793-8FB5-5CD74BEA36EC}
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "TestContainers101_Function": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7086",
+      "launchBrowser": false
+    }
+  }
+}
