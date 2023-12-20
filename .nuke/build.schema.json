@@ -72,6 +72,7 @@
           "items": {
             "type": "string",
             "enum": [
+              "CI",
               "Clean",
               "Compile",
               "DbUpdate",
@@ -83,7 +84,8 @@
               "Reset",
               "Restore",
               "Test",
-              "TestWithCoverage"
+              "TestWithCoverage",
+              "TestWithoutCoverage"
             ]
           }
         },
@@ -97,6 +99,7 @@
           "items": {
             "type": "string",
             "enum": [
+              "CI",
               "Clean",
               "Compile",
               "DbUpdate",
@@ -108,7 +111,8 @@
               "Reset",
               "Restore",
               "Test",
-              "TestWithCoverage"
+              "TestWithCoverage",
+              "TestWithoutCoverage"
             ]
           }
         },

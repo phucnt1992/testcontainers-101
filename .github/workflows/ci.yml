@@ -49,14 +49,14 @@ jobs:
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj', '**/Directory.Packages.props') }}
 
-      - name: 'Run: Init, Lint, TestWithCoverage'
+      - name: 'Run CI tasks'
         run: |
           dotnet-sonarscanner begin /k:"${{ env.PROJECT_KEY }}" \
             /o:"${{ env.ORGANIZATION }}" \
             /d:sonar.host.url="${{ env.SONAR_HOST_URL }}" \
             /d:sonar.cs.opencover.reportsPaths=**/coverage.xml \
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
-          ./build.sh Init Lint TestWithCoverage TestWithoutCoverage
+          ./build.sh ci
           dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
         env:
           PROJECT_KEY: phucnt1992_testcontainers-101
