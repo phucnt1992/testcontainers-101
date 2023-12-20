@@ -2,6 +2,8 @@
 # FROM mcr.microsoft.com/azure-functions/dotnet-isolated:4.0-dotnet-isolated8.0-appservice
 FROM mcr.microsoft.com/azure-functions/dotnet-isolated:4.0-dotnet-isolated8.0
 
+USER app
+
 ARG CONFIGRATION=Debug
 ARG NET_VERSION=net8.0
 
