@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/dotnet:8.0-bookworm
+FROM mcr.microsoft.com/devcontainers/dotnet:8.0-jammy
 
 # Install Azure Functions Core Tools v4
 RUN wget -q https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb \
