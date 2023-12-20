@@ -1,0 +1,9 @@
+FROM mcr.microsoft.com/azure-functions/dotnet-isolated:4.0-dotnet-isolated8.0
+
+ARG DOTNET_VERSION=net8.0
+ARG CONFIGRATION=Debug
+
+ENV AzureWebJobsScriptRoot=/home/site/wwwroot \
+    AzureFunctionsJobHost__Logging__Console__IsEnabled=true
+
+COPY ./bin/$CONFIGRATION/$DOTNET_VERSION /home/site/wwwroot
