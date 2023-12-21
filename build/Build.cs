@@ -141,7 +141,7 @@ class Build : NukeBuild
         });
 
     Target CI => _ => _
-        .DependsOn(Init, Lint, TestWithCoverage, TestWithoutCoverage);
+        .DependsOn(Init, Lint, TestWithoutCoverage, TestWithCoverage);
 
     Target GenerateHtmlTestReport => _ => _
         .DependsOn(TestWithCoverage)
