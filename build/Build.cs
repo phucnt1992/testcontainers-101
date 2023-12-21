@@ -122,8 +122,7 @@ class Build : NukeBuild
                 .SetCollectCoverage(true)
                 .SetCoverletOutputFormat(CoverletOutputFormat.opencover)
                 .SetCoverletOutput(RootDirectory / CoverageFolderName / CoverageReportFile)
-                .SetExcludeByFile("**/Migrations/*.cs")
-                .SetExcludeByFile("**/Function/*.cs")
+                .SetExcludeByFile("**/Migrations/*.cs%2C**/Function/*.cs")
                 .SetNoRestore(true)
             ));
         });
