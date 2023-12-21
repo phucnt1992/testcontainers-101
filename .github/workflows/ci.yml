@@ -57,6 +57,7 @@ jobs:
             /d:sonar.cs.opencover.reportsPaths=**/coverage.xml \
             /d:sonar.scm.provider=git \
             /d:sonar.projectBaseDir=${{ github.workspace }} \
+            /d:sonar.coverage.exclusions=**/Migrations/**,**/Function/** \
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
           ./build.sh ci
           dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
