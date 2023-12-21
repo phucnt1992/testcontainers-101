@@ -56,7 +56,7 @@ jobs:
             /d:sonar.host.url="${{ env.SONAR_HOST_URL }}" \
             /d:sonar.cs.opencover.reportsPaths=**/coverage.xml \
             /d:sonar.scm.provider=git \
-            /d:sonar.projectBaseDir=. \
+            /d:sonar.projectBaseDir=src \
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
           ./build.sh ci
           dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
